@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.UnsupportedEncodingException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +36,18 @@ public class PCCoreWebServiceTest {
 		String result = mockMvc.perform(get("/greeting").contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.id").value(1))
 				.andExpect(jsonPath("$.content").value("Fist SpringBoot App!")).andReturn().getResponse()
+				.getContentAsString();
+
+		System.out.println(result);
+	}
+	
+	//http://localhost:8881/core/computer/all
+	@Test
+	public void whenGetAllComputers() throws UnsupportedEncodingException, Exception {
+		String result = mockMvc.perform(get("/computer/all").contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk())
+				//判断应该返回数组长度为3
+				.andExpect(jsonPath("$.length()").value(3)).andReturn().getResponse()
 				.getContentAsString();
 
 		System.out.println(result);
