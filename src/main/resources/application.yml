@@ -23,4 +23,3 @@ logging:
     com.alibaba.druid.proxy.jdbc: info
     org.apache.ibatis.transaction.managed: info
     druid.sql: info
-    org.springframework.security: debug
