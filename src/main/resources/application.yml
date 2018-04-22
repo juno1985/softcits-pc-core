@@ -1,0 +1,18 @@
+server:
+  port: 8881
+  servlet:
+    context-path: /core
+
+logging:
+  file: logs/pc-core.log 
+  level:
+    root: info
+    org.apache.ibatis: debug
+    java.sql.Connection: debug
+    java.sql.Statement: debug
+    java.sql.PreparedStatement: debug
+    com.alibaba.druid.sql: debug
+    com.alibaba.druid.proxy.jdbc: info
+    org.apache.ibatis.transaction.managed: info
+    druid.sql: info
+    org.springframework.security: debug
