@@ -7,4 +7,6 @@
     <relativePath>../softcits-pc-parent</relativePath>
   </parent>
   <artifactId>softcits-pc-core</artifactId>
+   <packaging>jar</packaging>
+   
 </project>
