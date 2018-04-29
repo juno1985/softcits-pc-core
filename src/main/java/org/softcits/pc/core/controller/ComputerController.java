@@ -5,11 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 import org.softcits.pc.core.model.MbgComputer;
+import org.softcits.pc.core.model.PCPager;
 import org.softcits.pc.core.service.ComputerService;
 @RestController
 public class ComputerController {
@@ -17,9 +19,15 @@ public class ComputerController {
 	@Autowired
 	private ComputerService computerService;
 
+	/**
+	 * 
+	 * @param pageSize 每页显示的条数
+	 * @param pageNum 当前页码
+	 * @return
+	 */
 	@RequestMapping(path="/computer/all", method = RequestMethod.GET)
-	public ResponseEntity<List<MbgComputer>> getAllComputers(){
-		List<MbgComputer> mbgComputerList = computerService.getAllComputers();
-		return new ResponseEntity<List<MbgComputer>>(mbgComputerList, HttpStatus.OK);
+	public ResponseEntity<PCPager<MbgComputer>> getAllComputers(@RequestParam String pageSize, @RequestParam String pageNum){
+		PCPager<MbgComputer> pcPager = computerService.getAllComputers(pageSize, pageNum);
+		return new ResponseEntity<PCPager<MbgComputer>>(pcPager, HttpStatus.OK);
 	}
 }
