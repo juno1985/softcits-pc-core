@@ -52,4 +52,14 @@ public class PCCoreWebServiceTest {
 
 		System.out.println(result);
 	}
+	
+	//http://localhost:8881/core/computer/18/delete
+	@Test
+	public void whenDeleteById() throws Exception{
+		String result = mockMvc.perform(get("/computer/18/delete").contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk())
+				.andReturn().getResponse()
+				.getContentAsString();
+		System.out.println(result);
+	}
 }
