@@ -1,6 +1,7 @@
 package org.softcits.pc.core.test;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,5 +62,23 @@ public class PCCoreWebServiceTest {
 				.andReturn().getResponse()
 				.getContentAsString();
 		System.out.println(result);
+	}
+	
+	//http://localhost:8881/core/computer/add
+	/*param:{
+		trademark:"xxPC",
+		price: "999.99",
+		pic:"a.jpg"
+	}*/
+	@Test
+	public void whenAddComputer() throws Exception{
+		String content = "{" + "\"trademark\":\"xxPC\"," + "\"price\": \"999.99\"," + "\"pic\":\"a.jpg\"" + "}";
+		String reuslt = mockMvc.perform(post("/computer/add").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(content))
+				.andExpect(status().is2xxSuccessful())
+				.andExpect(jsonPath("$.msg").value("Created Successfully"))
+				.andReturn().getResponse().getContentAsString();
+		
+		System.out.println(reuslt);
 	}
 }

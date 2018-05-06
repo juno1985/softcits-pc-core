@@ -2,13 +2,17 @@ package org.softcits.pc.core.service;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.softcits.pc.core.mapper.MbgComputerMapper;
 import org.softcits.pc.core.model.MbgComputer;
+import org.softcits.pc.core.model.MbgComputerForm;
 import org.softcits.pc.core.model.PCPager;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.yaml.snakeyaml.introspector.PropertyUtils;
 
 import com.github.pagehelper.PageHelper;
 
@@ -40,6 +44,17 @@ public class ComputerService {
 	public String deleteById(String cid) {
 		mbgComputerMapper.deleteByPrimaryKey(Integer.parseInt(cid));
 		return "Success";
+	}
+
+	//添加商品
+	public void add(@Valid MbgComputerForm mbgComputerForm) {
+		MbgComputer mbgComputer = new MbgComputer();
+	/*	mbgComputer.setTrademark(mbgComputerForm.getTrademark());
+		mbgComputer.setPrice(mbgComputerForm.getPrice());
+		mbgComputer.setPic(mbgComputerForm.getPic());*/
+		
+		BeanUtils.copyProperties(mbgComputerForm, mbgComputer);
+		mbgComputerMapper.insert(mbgComputer);
 	}
 
 }
