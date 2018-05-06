@@ -45,6 +45,7 @@ public class ComputerController {
 	@RequestMapping(path="/computer/add", method = RequestMethod.POST)
 	public ResponseEntity<Map> computerAdd(@RequestBody @Valid MbgComputerForm mbgComputerForm,
 			BindingResult bindingResult){
+		//如果MbgComputerForm表单验证未通过,则抛出异常,需要使用@ExceptionHandler处理
 		if(bindingResult.hasErrors()) {
 			throw new PC4XXException(bindingResult.getFieldError().getDefaultMessage());
 		}

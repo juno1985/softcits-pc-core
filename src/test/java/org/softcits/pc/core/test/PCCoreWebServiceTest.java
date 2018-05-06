@@ -81,4 +81,15 @@ public class PCCoreWebServiceTest {
 		
 		System.out.println(reuslt);
 	}
+	
+	@Test
+	public void whenAddComputerFailedWithNoTradeMark() throws Exception{
+		String content = "{" + "\"trademark\":\"\"," + "\"price\": \"999.99\"," + "\"pic\":\"a.jpg\"" + "}";
+		String reuslt = mockMvc.perform(post("/computer/add").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(content))
+				.andExpect(status().is4xxClientError())
+				.andReturn().getResponse().getContentAsString();
+		
+		System.out.println(reuslt);
+	}
 }
