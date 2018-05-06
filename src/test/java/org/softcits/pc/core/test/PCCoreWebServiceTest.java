@@ -92,4 +92,16 @@ public class PCCoreWebServiceTest {
 		
 		System.out.println(reuslt);
 	}
+	
+	@Test
+	public void whenAddComputerFailedAddingSameTradeMark() throws Exception{
+		String content = "{" + "\"trademark\":\"xxPC\"," + "\"price\": \"999.99\"," + "\"pic\":\"a.jpg\"" + "}";
+		String reuslt = mockMvc.perform(post("/computer/add").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(content))
+				.andExpect(status().is4xxClientError())
+				.andExpect(jsonPath("$.msg").value("PC Already Exist"))
+				.andReturn().getResponse().getContentAsString();
+		
+		System.out.println(reuslt);
+	}
 }

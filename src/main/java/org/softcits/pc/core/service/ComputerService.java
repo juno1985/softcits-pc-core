@@ -4,8 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.softcits.pc.core.exception.PC4XXException;
 import org.softcits.pc.core.mapper.MbgComputerMapper;
 import org.softcits.pc.core.model.MbgComputer;
+import org.softcits.pc.core.model.MbgComputerExample;
 import org.softcits.pc.core.model.MbgComputerForm;
 import org.softcits.pc.core.model.PCPager;
 import org.springframework.beans.BeanUtils;
@@ -52,6 +54,18 @@ public class ComputerService {
 	/*	mbgComputer.setTrademark(mbgComputerForm.getTrademark());
 		mbgComputer.setPrice(mbgComputerForm.getPrice());
 		mbgComputer.setPic(mbgComputerForm.getPic());*/
+		
+		String tradeMark = mbgComputerForm.getTrademark();
+		
+		MbgComputerExample mbgComputerExa = new MbgComputerExample();
+		MbgComputerExample.Criteria mbgComputerCri = mbgComputerExa.createCriteria();
+		mbgComputerCri.andTrademarkEqualTo(tradeMark);
+		List<MbgComputer> mbgComputerList = mbgComputerMapper.selectByExample(mbgComputerExa);
+		//如果已经存在该商品名称则不允许添加
+		if(mbgComputerList.size() > 0 ) {
+			throw new PC4XXException("PC Already Exist");
+		}
+		
 		
 		BeanUtils.copyProperties(mbgComputerForm, mbgComputer);
 		mbgComputerMapper.insert(mbgComputer);
