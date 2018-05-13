@@ -1,9 +1,10 @@
 package org.softcits.pc.core.service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
-
+import org.softcits.pc.mgt.common.SoftcitsJsonUtil;
 import org.softcits.pc.core.exception.PC404Exception;
 import org.softcits.pc.core.exception.PC4XXException;
 import org.softcits.pc.core.mapper.MbgComputerMapper;
@@ -13,12 +14,12 @@ import org.softcits.pc.core.model.MbgComputerForm;
 import org.softcits.pc.core.model.PCPager;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
-
 import com.github.pagehelper.PageHelper;
-
 import org.springframework.transaction.annotation.Isolation;
 //需要加入事务管理
 @Transactional(value = "transactionManager", rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED, timeout = 300)
@@ -27,6 +28,12 @@ public class ComputerService {
 	
 	@Autowired
 	private MbgComputerMapper mbgComputerMapper;
+	
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
+	
+	@Value("${PC_ID_REDIS}")
+	private String PC_ID_REDIS;
 	
 	//返回所有的Computer数组
 	public PCPager<MbgComputer> getAllComputers(String pageSize, String pageNum){
@@ -73,6 +80,20 @@ public class ComputerService {
 	}
 
 	public MbgComputer queryComputerById(String cid) {
+		
+		String key = PC_ID_REDIS + ":" + cid;
+		
+		//判断是否在redis中
+		if(stringRedisTemplate.hasKey(key)) {
+			String pcJson = stringRedisTemplate.opsForValue().get(key);
+			
+			System.out.println("从Redis中取出数据");
+			
+			//需要将JSON字符串转化为MbgComputer对象
+			return SoftcitsJsonUtil.jsonToPojo(pcJson, MbgComputer.class);
+		}
+		
+		//Redis中没有查到的话则查询数据库
 		MbgComputerExample mbgComputerExa = new MbgComputerExample();
 		MbgComputerExample.Criteria mbgComputerCri = mbgComputerExa.createCriteria();
 		mbgComputerCri.andIdEqualTo(Integer.parseInt(cid));
@@ -80,6 +101,15 @@ public class ComputerService {
 		if(mbgComList.size() < 0) {
 			throw new PC404Exception("PC Not Found");
 		}
+		//将MbgComputer转化为JSON字符串然后存进Redis
+		MbgComputer mbgComputer = mbgComList.get(0);
+		String pcJson = SoftcitsJsonUtil.objectToJson(mbgComputer);
+		
+		System.out.println("从数据库中查询数据");
+		
+		//然后将数据写入Redis
+		stringRedisTemplate.opsForValue().set(key, pcJson, 60, TimeUnit.MINUTES);
+		
 		return mbgComList.get(0);
 	}
 

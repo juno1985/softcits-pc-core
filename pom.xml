@@ -15,8 +15,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.softcits.com</groupId>
+			<artifactId>softcits-pc-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<resources>
 			<resource>

@@ -27,3 +27,5 @@ logging:
     com.alibaba.druid.proxy.jdbc: info
     org.apache.ibatis.transaction.managed: info
     druid.sql: info
+
+PC_ID_REDIS: pc_id
