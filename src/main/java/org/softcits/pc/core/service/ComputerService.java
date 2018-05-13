@@ -87,7 +87,8 @@ public class ComputerService {
 		if(stringRedisTemplate.hasKey(key)) {
 			String pcJson = stringRedisTemplate.opsForValue().get(key);
 			
-			System.out.println("从Redis中取出数据");
+			//重置过期时间
+			stringRedisTemplate.expire(key, 60, TimeUnit.MINUTES);
 			
 			//需要将JSON字符串转化为MbgComputer对象
 			return SoftcitsJsonUtil.jsonToPojo(pcJson, MbgComputer.class);
@@ -104,8 +105,6 @@ public class ComputerService {
 		//将MbgComputer转化为JSON字符串然后存进Redis
 		MbgComputer mbgComputer = mbgComList.get(0);
 		String pcJson = SoftcitsJsonUtil.objectToJson(mbgComputer);
-		
-		System.out.println("从数据库中查询数据");
 		
 		//然后将数据写入Redis
 		stringRedisTemplate.opsForValue().set(key, pcJson, 60, TimeUnit.MINUTES);
