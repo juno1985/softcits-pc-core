@@ -55,4 +55,10 @@ public class ComputerController {
 		result.put("msg", "Created Successfully");
 		return new ResponseEntity<Map>(result, HttpStatus.CREATED);
 	}
+	
+	@RequestMapping(path="/computer/{cid}/query", method = RequestMethod.GET)
+	public ResponseEntity<MbgComputer> queryComputerById(@PathVariable String cid){
+		MbgComputer mbgComputer = computerService.queryComputerById(cid);
+		return new ResponseEntity<MbgComputer>(mbgComputer, HttpStatus.OK);
+	}
 }

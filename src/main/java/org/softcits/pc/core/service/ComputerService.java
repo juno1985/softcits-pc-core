@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.softcits.pc.core.exception.PC404Exception;
 import org.softcits.pc.core.exception.PC4XXException;
 import org.softcits.pc.core.mapper.MbgComputerMapper;
 import org.softcits.pc.core.model.MbgComputer;
@@ -69,6 +70,17 @@ public class ComputerService {
 		
 		BeanUtils.copyProperties(mbgComputerForm, mbgComputer);
 		mbgComputerMapper.insert(mbgComputer);
+	}
+
+	public MbgComputer queryComputerById(String cid) {
+		MbgComputerExample mbgComputerExa = new MbgComputerExample();
+		MbgComputerExample.Criteria mbgComputerCri = mbgComputerExa.createCriteria();
+		mbgComputerCri.andIdEqualTo(Integer.parseInt(cid));
+		List<MbgComputer> mbgComList = mbgComputerMapper.selectByExample(mbgComputerExa);
+		if(mbgComList.size() < 0) {
+			throw new PC404Exception("PC Not Found");
+		}
+		return mbgComList.get(0);
 	}
 
 }

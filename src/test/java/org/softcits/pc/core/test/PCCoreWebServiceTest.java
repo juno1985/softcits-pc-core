@@ -104,4 +104,18 @@ public class PCCoreWebServiceTest {
 		
 		System.out.println(reuslt);
 	}
+	
+	///computer/{cid}/query
+	@Test
+	public void whenTestComputerQueryById() throws Exception{
+		String result = mockMvc.perform(get("/computer/102/query").contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(102))
+				.andExpect(jsonPath("$.trademark").value("IBM电脑"))
+				.andExpect(jsonPath("$.price").value(9999.99))
+				.andReturn().getResponse()
+				.getContentAsString();
+
+		System.out.println(result);
+	}
 }
