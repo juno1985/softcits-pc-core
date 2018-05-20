@@ -11,6 +11,7 @@ import org.softcits.pc.core.mapper.MbgComputerMapper;
 import org.softcits.pc.core.model.MbgComputer;
 import org.softcits.pc.core.model.MbgComputerExample;
 import org.softcits.pc.core.model.MbgComputerForm;
+import org.softcits.pc.core.model.MbgComputerUpdateForm;
 import org.softcits.pc.core.model.PCPager;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +111,22 @@ public class ComputerService {
 		stringRedisTemplate.opsForValue().set(key, pcJson, 60, TimeUnit.MINUTES);
 		
 		return mbgComList.get(0);
+	}
+
+	public void update(@Valid MbgComputerUpdateForm mbgComputerUpdateForm) {
+		
+		//更新前需要先判断商品是否存在
+		Integer cid = mbgComputerUpdateForm.getId();
+		@SuppressWarnings("unchecked")
+		MbgComputer mbgComputer = mbgComputerMapper.selectByPrimaryKey(cid);
+		
+		if(mbgComputer == null) {
+			throw new PC404Exception("PC Not Found");
+		}
+		mbgComputerUpdateForm.setPic(mbgComputer.getPic());
+		//如果存在则进行商品更新
+		BeanUtils.copyProperties(mbgComputerUpdateForm, mbgComputer);
+		mbgComputerMapper.updateByPrimaryKey(mbgComputer);
 	}
 
 }

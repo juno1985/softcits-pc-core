@@ -118,4 +118,17 @@ public class PCCoreWebServiceTest {
 
 		System.out.println(result);
 	}
+	
+	//{"id":103,"trademark":"戴尔电脑","price":6666.0,"pic":null}
+	@Test
+	public void whenUpdateComputer() throws Exception{
+		String content = "{" +"\"id\":103," + "\"trademark\":\"戴尔电脑\"," + "\"price\": 999.99" + "}";
+		String reuslt = mockMvc.perform(post("/computer/update").contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(content))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.msg").value("Update Successfully"))
+				.andReturn().getResponse().getContentAsString();
+		
+		System.out.println(reuslt);
+	}
 }
