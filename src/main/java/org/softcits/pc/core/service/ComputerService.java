@@ -127,6 +127,16 @@ public class ComputerService {
 		//如果存在则进行商品更新
 		BeanUtils.copyProperties(mbgComputerUpdateForm, mbgComputer);
 		mbgComputerMapper.updateByPrimaryKey(mbgComputer);
+		//拼接Redis中的key
+		String key = PC_ID_REDIS + ":" + cid;
+		//判断是否在redis中,如果存在
+		if(stringRedisTemplate.hasKey(key)) {
+			//现将商品对象转化为JSON
+			String pcJson = SoftcitsJsonUtil.objectToJson(mbgComputer);
+			//然后将数据更新进Redis
+			stringRedisTemplate.opsForValue().set(key, pcJson, 60, TimeUnit.MINUTES);
+
+		}
 	}
 
 }
