@@ -117,7 +117,6 @@ public class ComputerService {
 		
 		//更新前需要先判断商品是否存在
 		Integer cid = mbgComputerUpdateForm.getId();
-		@SuppressWarnings("unchecked")
 		MbgComputer mbgComputer = mbgComputerMapper.selectByPrimaryKey(cid);
 		
 		if(mbgComputer == null) {
