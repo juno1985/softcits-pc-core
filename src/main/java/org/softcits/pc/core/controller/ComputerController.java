@@ -36,8 +36,8 @@ public class ComputerController {
 	 * @return
 	 */
 	@RequestMapping(path = "/computer/all", method = RequestMethod.GET)
-	public ResponseEntity<PCPager<MbgComputer>> getAllComputers(@RequestParam String pageSize,
-			@RequestParam String pageNum) {
+	public ResponseEntity<PCPager<MbgComputer>> getAllComputers(@RequestParam(required=false) String pageSize,
+			@RequestParam(required=false) String pageNum) {
 		PCPager<MbgComputer> pcPager = computerService.getAllComputers(pageSize, pageNum);
 		return new ResponseEntity<PCPager<MbgComputer>>(pcPager, HttpStatus.OK);
 	}

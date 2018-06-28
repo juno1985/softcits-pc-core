@@ -20,6 +20,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
+
+import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.PageHelper;
 import org.springframework.transaction.annotation.Isolation;
 //需要加入事务管理
@@ -38,12 +40,16 @@ public class ComputerService {
 	
 	//返回所有的Computer数组
 	public PCPager<MbgComputer> getAllComputers(String pageSize, String pageNum){
-		PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
+		PCPager<MbgComputer> pcPager = new PCPager<>();
+		if(!StringUtils.isEmpty(pageSize) && !StringUtils.isEmpty(pageNum)) {
+			PageHelper.startPage(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
+			pcPager.setPageNum(Integer.parseInt(pageNum));
+		}
 		List<MbgComputer> mbgComputerList = mbgComputerMapper.selectByExample(null);
 		
-		PCPager<MbgComputer> pcPager = new PCPager<>();
+		
 		pcPager.setData(mbgComputerList);
-		pcPager.setPageNum(Integer.parseInt(pageNum));
+		
 		//查询数据库中所有的条数
 		Long totalRows = mbgComputerMapper.countByExample(null);
 		pcPager.setTotalRows(totalRows);
